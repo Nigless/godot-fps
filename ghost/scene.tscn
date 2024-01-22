@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://b530de47p1dfm"]
+
+[ext_resource type="Script" path="res://ghost/ghost.cs" id="1_0sdvb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8ojg"]
+radius = 0.326865
+height = 1.8
+
+[node name="ghost" type="CharacterBody3D"]
+script = ExtResource("1_0sdvb")
+
+[node name="head" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_a8ojg")
