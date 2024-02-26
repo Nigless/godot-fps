@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://u6h4m5xgby2n"]
+
+[ext_resource type="Script" path="res://ghost/state/IdleState.cs" id="2_acfd7"]
+[ext_resource type="Script" path="res://StateMachine.cs" id="2_wq3av"]
+[ext_resource type="Script" path="res://ghost/state/JumpingState.cs" id="3_2kf6h"]
+[ext_resource type="Script" path="res://ghost/state/FallingState.cs" id="4_glxjw"]
+[ext_resource type="Script" path="res://ghost/state/WalkingState.cs" id="5_bhw13"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8ojg"]
+radius = 0.326865
+height = 1.7
+
+[node name="ghost" type="CharacterBody3D"]
+
+[node name="head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0)
+
+[node name="cam" type="Camera3D" parent="head"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_a8ojg")
+
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("initialState")]
+script = ExtResource("2_wq3av")
+initialState = NodePath("idle")
+
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("head", "ghost")]
+script = ExtResource("2_acfd7")
+head = NodePath("../../head")
+ghost = NodePath("../..")
+
+[node name="jumping" type="Node" parent="state_machine" node_paths=PackedStringArray("head", "ghost")]
+script = ExtResource("3_2kf6h")
+head = NodePath("../..")
+ghost = NodePath("../..")
+
+[node name="falling" type="Node" parent="state_machine" node_paths=PackedStringArray("head", "ghost")]
+script = ExtResource("4_glxjw")
+head = NodePath("../../head")
+ghost = NodePath("../..")
+
+[node name="walking" type="Node" parent="state_machine" node_paths=PackedStringArray("head", "ghost")]
+script = ExtResource("5_bhw13")
+head = NodePath("../../head")
+ghost = NodePath("../..")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b530de47p1dfm"]
+
+[ext_resource type="Script" path="res://spectator/Spectator.cs" id="1_kwjwp"]
+
+[node name="spectator" type="Node3D"]
+script = ExtResource("1_kwjwp")
+
+[node name="Camera3D" type="Camera3D" parent="."]

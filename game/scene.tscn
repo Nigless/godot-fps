@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://b4mjh0scldvmh"]
 
-[ext_resource type="Script" path="res://game/game.cs" id="1_8t784"]
-[ext_resource type="PackedScene" uid="uid://b530de47p1dfm" path="res://ghost/scene.tscn" id="1_evxr1"]
+[ext_resource type="Script" path="res://game/Game.cs" id="1_a63hw"]
+[ext_resource type="PackedScene" uid="uid://u6h4m5xgby2n" path="res://ghost/ghost.tscn" id="2_avbd0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r062y"]
 
@@ -24,10 +24,7 @@ margin = 0.085
 albedo_color = Color(0, 0.811765, 0.419608, 1)
 
 [node name="scene" type="Node3D"]
-script = ExtResource("1_8t784")
-
-[node name="ghost" parent="." instance=ExtResource("1_evxr1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.5913, 0)
+script = ExtResource("1_a63hw")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.873611, 0.448229, -0.189459, 0, 0.389333, 0.921097, 0.486625, -0.80468, 0.340126, 0, 0, 0)
@@ -175,3 +172,6 @@ mesh = SubResource("BoxMesh_p2p46")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D5"]
 shape = SubResource("BoxShape3D_gfk85")
+
+[node name="ghost" parent="." instance=ExtResource("2_avbd0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06857, 0)
