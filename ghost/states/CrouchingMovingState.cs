@@ -29,7 +29,7 @@ public class CrouchingMovingState : CrouchingState
 
         if (InputMoving.Length() == 0 || InputIsJumping)
         {
-            return _Context.CrouchingState.UpdateState();
+            return _Context.StateMachine.Get<CrouchingState>().UpdateState();
         }
 
 

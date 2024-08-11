@@ -19,22 +19,22 @@ public class CrouchingState : StandingState
     {
         if (!InputIsCrouching)
         {
-            return _Context.StandingState.UpdateState();
+            return _Context.StateMachine.Get<StandingState>().UpdateState();
         }
 
         if (!_Context.IsOnFloor())
         {
-            return _Context.CrouchingFallingState;
+            return _Context.StateMachine.Get<CrouchingFallingState>();
         }
 
         if (InputIsJumping)
         {
-            return _Context.CrouchingJumpingState;
+            return _Context.StateMachine.Get<CrouchingJumpingState>();
         }
 
         if (InputMoving.Length() > 0)
         {
-            return _Context.CrouchingMovingState;
+            return _Context.StateMachine.Get<CrouchingMovingState>();
         }
 
         return this;

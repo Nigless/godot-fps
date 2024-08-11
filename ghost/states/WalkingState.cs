@@ -28,13 +28,13 @@ public class WalkingState : StandingState
 
         if (InputMoving.Length() == 0 || InputIsJumping || !_Context.IsOnFloor())
         {
-            return _Context.StandingState.UpdateState();
+            return _Context.StateMachine.Get<StandingState>().UpdateState();
         }
 
 
         if (InputIsRunning)
         {
-            return _Context.RunningState;
+            return _Context.StateMachine.Get<RunningState>();
         }
 
 

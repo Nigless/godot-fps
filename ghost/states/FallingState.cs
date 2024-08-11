@@ -7,13 +7,12 @@ public class FallingState : StandingState
 {
     private const float SPEED = 2.0f;
 
-
+    public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public FallingState(Ghost stateMachine) : base(stateMachine)
     {
 
     }
-
 
     public override void Update(double delta)
     {
@@ -32,7 +31,7 @@ public class FallingState : StandingState
             velocity = velocity.Normalized()
             * (moveVelocity.Length() - speed * coefficient);
         }
-        velocity.Y = _Context.Velocity.Y - _Context.Gravity * (float)delta;
+        velocity.Y = _Context.Velocity.Y - Gravity * (float)delta;
 
         _Context.Velocity = velocity;
         _Context.MoveAndSlide();
@@ -43,7 +42,7 @@ public class FallingState : StandingState
     {
         if (_Context.IsOnFloor())
         {
-            return _Context.StandingState.UpdateState();
+            return _Context.StateMachine.Get<StandingState>().UpdateState();
         }
 
         return this;

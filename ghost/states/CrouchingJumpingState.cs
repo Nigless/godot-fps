@@ -25,7 +25,7 @@ public class CrouchingJumpingState : CrouchingFallingState
     {
         if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0)
         {
-            return _Context.CrouchingState.UpdateState();
+            return _Context.StateMachine.Get<CrouchingState>().UpdateState();
         }
 
         return this;

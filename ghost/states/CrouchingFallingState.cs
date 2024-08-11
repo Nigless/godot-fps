@@ -12,14 +12,14 @@ public class CrouchingFallingState : CrouchingState
 
     public override void Update(double delta)
     {
-        _Context.FallingState.Update(delta);
+        _Context.StateMachine.Get<FallingState>().Update(delta);
     }
 
     public override State UpdateState()
     {
         if (_Context.IsOnFloor())
         {
-            return _Context.CrouchingState.UpdateState();
+            return _Context.StateMachine.Get<CrouchingState>().UpdateState();
         }
 
         return this;

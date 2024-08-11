@@ -22,6 +22,11 @@ public class StandingState : State
         _Context = context;
     }
 
+    public override void Enter()
+    {
+        Godot.Input.MouseMode = Godot.Input.MouseModeEnum.Captured;
+    }
+
 
     public override void Input(InputEvent ev)
     {
@@ -58,22 +63,22 @@ public class StandingState : State
     {
         if (InputIsCrouching)
         {
-            return _Context.CrouchingState.UpdateState();
+            return _Context.StateMachine.Get<CrouchingState>().UpdateState();
         }
 
         if (InputIsJumping)
         {
-            return _Context.JumpingState;
+            return _Context.StateMachine.Get<JumpingState>();
         }
 
         if (!_Context.IsOnFloor())
         {
-            return _Context.FallingState;
+            return _Context.StateMachine.Get<FallingState>();
         }
 
         if (InputMoving.Length() > 0)
         {
-            return _Context.WalkingState.UpdateState();
+            return _Context.StateMachine.Get<WalkingState>().UpdateState();
         }
 
         return this;

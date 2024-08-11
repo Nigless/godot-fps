@@ -24,7 +24,7 @@ public class JumpingState : FallingState
     {
         if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0)
         {
-            return _Context.FallingState.UpdateState();
+            return _Context.StateMachine.Get<FallingState>().UpdateState();
         }
 
         return this;

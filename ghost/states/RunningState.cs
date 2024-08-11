@@ -13,7 +13,7 @@ public class RunningState : WalkingState
     {
         if (!InputIsRunning || InputIsJumping || !_Context.IsOnFloor())
         {
-            return _Context.WalkingState.UpdateState();
+            return _Context.StateMachine.Get<WalkingState>().UpdateState();
         }
 
 
