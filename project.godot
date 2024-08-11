@@ -10,13 +10,13 @@ config_version=5
 
 [application]
 
-config/name="godot-test"
+config/name="godot-fps"
 run/main_scene="res://game/scene.tscn"
-config/features=PackedStringArray("4.1", "C#", "Forward Plus")
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 
 [dotnet]
 
-project/assembly_name="godot-test"
+project/assembly_name="godot-fps"
 
 [input]
 

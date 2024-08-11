@@ -1,77 +1,79 @@
 using Godot;
 using System;
-using System.Diagnostics;
+using static Godot.GD;
 
 public partial class Ghost : CharacterBody3D
 {
 
-	private const float BASE_SPEED = 3.0f;
-	private const float FALL_SPEED = 0.05f;
-	private const float SPRINT_SPEED = 5.0f;
-	private const float ACCELERATION = 15.0f;
-	private const float JUMP_VELOCITY = 4.5f;
+	public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
-	private Vector3 moveVelocity = Vector3.Zero;
-	private const float MOUSE_SENSITIVITY = 0.001f;
 
-	private Node3D head;
-	private AnimationPlayer animation;
+	public StandingState StandingState;
+	public WalkingState WalkingState;
+	public FallingState FallingState;
+	public JumpingState JumpingState;
+	public RunningState RunningState;
+	public CrouchingState CrouchingState;
+	public CrouchingMovingState CrouchingMovingState;
+	public CrouchingFallingState CrouchingFallingState;
+	public CrouchingJumpingState CrouchingJumpingState;
 
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	public State CurrentState;
+
+
+	[Export]
+	public Node3D Head;
+
+	[Export]
+	public CollisionShape3D Collider;
 
 	public override void _Ready()
 	{
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-		head = GetNode("head") as Node3D;
-		animation = GetNode("head/view/animation") as AnimationPlayer;
+
+		StandingState = new StandingState(this);
+		WalkingState = new WalkingState(this);
+		FallingState = new FallingState(this);
+		JumpingState = new JumpingState(this);
+		RunningState = new RunningState(this);
+		CrouchingState = new CrouchingState(this);
+		CrouchingMovingState = new CrouchingMovingState(this);
+		CrouchingFallingState = new CrouchingFallingState(this);
+		CrouchingJumpingState = new CrouchingJumpingState(this);
+
+		CurrentState = StandingState;
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 inputDirection = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
-		var moveDirection = Transform.Basis * new Vector3(inputDirection.X, 0.0f, inputDirection.Y).Normalized();
-		var velocity = Velocity;
-
-		if (IsOnFloor())
-		{
-			var speed = Input.IsActionPressed("run") ? SPRINT_SPEED : BASE_SPEED;
-			velocity = velocity.MoveToward(moveDirection * speed, ACCELERATION * (float)delta);
-			velocity.Y = Velocity.Y;
-
-			if (Input.IsActionJustPressed("jump"))
-			{
-				velocity.Y = JUMP_VELOCITY;
-			}
-
-			animation.SpeedScale = velocity.Length();
-		}
-		else
-		{
-			velocity += moveDirection * FALL_SPEED;
-
-			velocity.Y -= gravity * (float)delta;
-			animation.SpeedScale = 0;
-		}
-
-
-		Velocity = velocity;
-
-		MoveAndSlide();
+		UpdateState();
+		CurrentState.Update(delta);
 	}
 
 
 	public override void _Input(InputEvent ev)
 	{
-		if (ev is InputEventMouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
-		{
-			InputEventMouseMotion mouseEvent = ev as InputEventMouseMotion;
-			RotateY(-mouseEvent.Relative.X * MOUSE_SENSITIVITY);
+		CurrentState.Input(ev);
+	}
 
-			var angle = -mouseEvent.Relative.Y * MOUSE_SENSITIVITY;
-			var rotation = head.Rotation;
-			rotation.X = (float)Math.Min(Math.Max(rotation.X + angle, -Math.PI / 2), Math.PI / 2);
-			head.Rotation = rotation;
+
+	public void UpdateState()
+	{
+
+
+		var state = CurrentState.UpdateState();
+
+		if (state == CurrentState)
+		{
+			return;
 		}
 
+		Print(state);
+
+
+		CurrentState.Exit();
+		state.Enter();
+		CurrentState = state;
 	}
+
 }

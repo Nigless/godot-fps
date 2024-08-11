@@ -1,0 +1,33 @@
+using static Godot.GD;
+
+
+public class JumpingState : FallingState
+{
+    private const float JUMP_VELOCITY = 4.5f;
+
+
+
+    public JumpingState(Ghost stateMachine) : base(stateMachine)
+    {
+
+    }
+
+    public override void Enter()
+    {
+        var velocity = _Context.Velocity;
+        velocity.Y += JUMP_VELOCITY;
+        _Context.Velocity = velocity;
+    }
+
+
+    public override State UpdateState()
+    {
+        if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0)
+        {
+            return _Context.FallingState.UpdateState();
+        }
+
+        return this;
+    }
+
+}
