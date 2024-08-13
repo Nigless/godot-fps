@@ -6,7 +6,7 @@ using Godot;
 
 public class FallingState : StandingState
 {
-    private const float SPEED = 1f;
+    private const float SPEED = 1.5f;
 
     public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 

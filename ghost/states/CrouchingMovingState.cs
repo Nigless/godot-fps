@@ -7,7 +7,7 @@ public class CrouchingMovingState : WalkingState
 
     public CrouchingMovingState(Ghost stateMachine) : base(stateMachine)
     {
-        SPEED = 1f;
+        SPEED = 1.5f;
         COLLIDER_HEIGHT = 1.0f;
     }
 

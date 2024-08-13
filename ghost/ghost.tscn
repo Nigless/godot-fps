@@ -101,6 +101,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.523, 0)
 [node name="camera" type="Camera3D" parent="head"]
 doppler_tracking = 2
 current = true
+fov = 80.0
 metadata/AnimatedRotation = Vector3(0, 0, -0.01)
 
 [node name="collider" type="CollisionShape3D" parent="."]
