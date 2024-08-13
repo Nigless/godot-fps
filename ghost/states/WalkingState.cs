@@ -10,7 +10,7 @@ public class WalkingState : StandingState
     {
     }
 
-    public override void Update(double delta)
+    protected override void UpdateMoving(double delta)
     {
         var moveVelocity = new Vector3(_Context.Velocity.X, 0.0f, _Context.Velocity.Z);
 
@@ -26,7 +26,7 @@ public class WalkingState : StandingState
     public override State UpdateState()
     {
 
-        if (InputMoving.Length() == 0 || InputIsJumping || !_Context.IsOnFloor())
+        if (InputMoving.Length() == 0 || InputIsJumping || !_Context.IsOnFloor() || InputIsCrouching)
         {
             return _Context.StateMachine.Get<StandingState>().UpdateState();
         }

@@ -1,19 +1,21 @@
+using ExtensionMethods;
 using Godot;
+using static Godot.GD;
+
 
 public class CrouchingState : StandingState
 {
-    protected new const float COLLIDER_HEIGHT = 1.0f;
 
     public CrouchingState(Ghost stateMachine) : base(stateMachine)
     {
+        COLLIDER_HEIGHT = 1.0f;
     }
 
-    public override void Update(double delta)
+
+    public override void Enter()
     {
-        CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
-
-        shape.Height = Lerp.Transit(shape.Height, COLLIDER_HEIGHT, COLLIDER_ACCELERATION * (float)delta);
     }
+
 
     public override State UpdateState()
     {

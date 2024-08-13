@@ -3,27 +3,17 @@ using Microsoft.VisualBasic;
 using static Godot.GD;
 
 
-public class CrouchingJumpingState : CrouchingFallingState
+public class CrouchingJumpingState : JumpingState
 {
-
-    private const float JUMP_VELOCITY = 3.5f;
-
-
     public CrouchingJumpingState(Ghost stateMachine) : base(stateMachine)
     {
-    }
-
-
-    public override void Enter()
-    {
-        var velocity = _Context.Velocity;
-        velocity.Y += JUMP_VELOCITY;
-        _Context.Velocity = velocity;
+        COLLIDER_HEIGHT = 1.0f;
+        JUMP_VELOCITY = 3.0f;
     }
 
     public override State UpdateState()
     {
-        if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0)
+        if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0 || !InputIsCrouching)
         {
             return _Context.StateMachine.Get<CrouchingState>().UpdateState();
         }

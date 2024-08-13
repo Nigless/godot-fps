@@ -141,7 +141,7 @@ mesh = SubResource("BoxMesh_p2p46")
 shape = SubResource("BoxShape3D_gfk85")
 
 [node name="StaticBody3D9" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.026, 0.494663, 4.19243)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.026, 0.862265, 4.19243)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D9"]
 material_override = SubResource("StandardMaterial3D_wttn6")

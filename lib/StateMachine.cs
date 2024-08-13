@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using static Godot.GD;
 
 public class StateMachine
 {
@@ -46,6 +47,8 @@ public class StateMachine
         {
             return;
         }
+
+        Print(state);
 
         _CurrentState.Exit();
         state.Enter();

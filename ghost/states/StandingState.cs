@@ -1,4 +1,5 @@
 using System;
+using ExtensionMethods;
 using Godot;
 using static Godot.GD;
 
@@ -8,8 +9,9 @@ public class StandingState : State
     protected readonly Ghost _Context;
     private const float MOUSE_SENSITIVITY = 0.001f;
     protected const float ACCELERATION = 20.0f;
-    protected const float COLLIDER_ACCELERATION = 20.0f;
-    protected const float COLLIDER_HEIGHT = 1.7f;
+    protected const float TRANSITION_SEED = 10.0f;
+    protected float COLLIDER_HEIGHT = 1.7f;
+    protected const float COLLIDER_RADIUS = 0.327f;
 
 
     protected Vector2 InputMoving => Godot.Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
@@ -42,13 +44,29 @@ public class StandingState : State
         }
     }
 
+    protected virtual void UpdateHead(double delta)
+    {
 
-    public override void Update(double delta)
+        var position = _Context.Head.Position;
+        position.Y = position.Y.Lerp(COLLIDER_HEIGHT / 2 - COLLIDER_RADIUS, TRANSITION_SEED * (float)delta);
+        _Context.Head.Position = position;
+    }
+
+    protected virtual void UpdateCollider(double delta)
     {
         CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
+        var position = _Context.Position;
+        var height = shape.Height.Lerp(COLLIDER_HEIGHT, TRANSITION_SEED * (float)delta);
 
-        shape.Height = Lerp.Transit(shape.Height, COLLIDER_HEIGHT, COLLIDER_ACCELERATION * (float)delta);
+        position.Y += (height - shape.Height) / 2;
+        _Context.Position = position;
 
+        shape.Height = height;
+        _Context.Collider.Shape = shape;
+    }
+
+    protected virtual void UpdateMoving(double delta)
+    {
         var moveVelocity = new Vector3(_Context.Velocity.X, 0.0f, _Context.Velocity.Z);
 
         var velocity = moveVelocity.MoveToward(Vector3.Zero, ACCELERATION * (float)delta);
@@ -57,6 +75,13 @@ public class StandingState : State
 
         _Context.Velocity = velocity;
         _Context.MoveAndSlide();
+    }
+
+    public override void Update(double delta)
+    {
+        UpdateCollider(delta);
+        UpdateHead(delta);
+        UpdateMoving(delta);
     }
 
     public override State UpdateState()

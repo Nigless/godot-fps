@@ -3,7 +3,7 @@ using static Godot.GD;
 
 public class JumpingState : FallingState
 {
-    private const float JUMP_VELOCITY = 4.5f;
+    protected float JUMP_VELOCITY = 4.5f;
 
 
 
@@ -22,7 +22,7 @@ public class JumpingState : FallingState
 
     public override State UpdateState()
     {
-        if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0)
+        if (_Context.IsOnFloor() || _Context.Velocity.Y <= 0 || InputIsCrouching)
         {
             return _Context.StateMachine.Get<FallingState>().UpdateState();
         }

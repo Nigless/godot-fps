@@ -1,11 +1,12 @@
 
 
 using System;
+using ExtensionMethods;
 using Godot;
 
 public class FallingState : StandingState
 {
-    private const float SPEED = 2.0f;
+    private const float SPEED = 1f;
 
     public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
@@ -13,8 +14,17 @@ public class FallingState : StandingState
     {
 
     }
+    protected override void UpdateCollider(double delta)
+    {
+        CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
+        var height = shape.Height.Lerp(COLLIDER_HEIGHT, TRANSITION_SEED * (float)delta);
 
-    public override void Update(double delta)
+        shape.Height = height;
+        _Context.Collider.Shape = shape;
+    }
+
+
+    protected override void UpdateMoving(double delta)
     {
         Vector3 velocity;
         var moveVelocity = new Vector3(_Context.Velocity.X, 0.0f, _Context.Velocity.Z);
@@ -37,10 +47,9 @@ public class FallingState : StandingState
         _Context.MoveAndSlide();
     }
 
-
     public override State UpdateState()
     {
-        if (_Context.IsOnFloor())
+        if (_Context.IsOnFloor() || InputIsCrouching)
         {
             return _Context.StateMachine.Get<StandingState>().UpdateState();
         }
