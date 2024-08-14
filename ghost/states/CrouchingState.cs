@@ -1,3 +1,4 @@
+using System;
 using ExtensionMethods;
 using Godot;
 using static Godot.GD;
@@ -8,7 +9,7 @@ public class CrouchingState : StandingState
 
     public CrouchingState(Ghost stateMachine) : base(stateMachine)
     {
-        COLLIDER_HEIGHT = 1.0f;
+        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
     }
 
 
@@ -19,7 +20,8 @@ public class CrouchingState : StandingState
 
     public override State UpdateState()
     {
-        if (!InputIsCrouching)
+
+        if (!InputIsCrouching && CanStandUp)
         {
             return _Context.StateMachine.Get<StandingState>().UpdateState();
         }

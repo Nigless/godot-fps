@@ -8,7 +8,7 @@ public class CrouchingFallingState : FallingState
 
     public CrouchingFallingState(Ghost stateMachine) : base(stateMachine)
     {
-        COLLIDER_HEIGHT = 1.0f;
+        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
     }
 
     public override State UpdateState()

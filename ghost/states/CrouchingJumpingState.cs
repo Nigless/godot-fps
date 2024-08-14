@@ -7,8 +7,8 @@ public class CrouchingJumpingState : JumpingState
 {
     public CrouchingJumpingState(Ghost stateMachine) : base(stateMachine)
     {
-        COLLIDER_HEIGHT = 1.0f;
-        JUMP_VELOCITY = 3.0f;
+        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
+        JumpVelocity = Ghost.JUMP_VELOCITY;
     }
 
     public override State UpdateState()

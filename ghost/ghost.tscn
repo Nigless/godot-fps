@@ -1,10 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://u6h4m5xgby2n"]
+[gd_scene load_steps=9 format=3 uid="uid://u6h4m5xgby2n"]
 
 [ext_resource type="Script" path="res://ghost/Ghost.cs" id="1_j0hy1"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8ojg"]
-radius = 0.326865
-height = 1.7
 
 [sub_resource type="Animation" id="Animation_kpoid"]
 length = 0.001
@@ -86,14 +82,35 @@ _data = {
 }
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_qnpgc"]
-graph_offset = Vector2(236, -52)
+graph_offset = Vector2(122.27, 10.3956)
 nodes/output/position = Vector2(920, 100)
 
-[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Collider", "Animation")]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8ojg"]
+radius = 0.326865
+height = 1.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7i7d1"]
+radius = 0.327
+
+[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Camera", "Collider", "CastUp", "CastDown", "Animation")]
 script = ExtResource("1_j0hy1")
 Head = NodePath("head")
+Camera = NodePath("head/camera")
 Collider = NodePath("collider")
-Animation = NodePath("animation")
+CastUp = NodePath("CastUp")
+CastDown = NodePath("CastDown")
+Animation = NodePath("Animation")
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ur47n")
+}
+autoplay = "RESET"
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+active = false
+tree_root = SubResource("AnimationNodeBlendTree_qnpgc")
+anim_player = NodePath("../Animation")
 
 [node name="head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.523, 0)
@@ -107,13 +124,10 @@ metadata/AnimatedRotation = Vector3(0, 0, -0.01)
 [node name="collider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_a8ojg")
 
-[node name="animation" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_ur47n")
-}
-autoplay = "RESET"
+[node name="CastUp" type="ShapeCast3D" parent="."]
+shape = SubResource("SphereShape3D_7i7d1")
+target_position = Vector3(0, 0.873, 0)
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-active = false
-tree_root = SubResource("AnimationNodeBlendTree_qnpgc")
-anim_player = NodePath("../animation")
+[node name="CastDown" type="ShapeCast3D" parent="."]
+shape = SubResource("SphereShape3D_7i7d1")
+target_position = Vector3(0, -0.873, 0)

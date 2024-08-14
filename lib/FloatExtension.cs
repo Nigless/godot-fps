@@ -1,4 +1,6 @@
 
+using System;
+
 namespace ExtensionMethods
 {
     public static class FloatExtension
@@ -7,6 +9,12 @@ namespace ExtensionMethods
         {
             return from * (1 - by) + to * by;
         }
+
+        public static float Abs(this float from)
+        {
+            return Math.Abs(from);
+        }
+
 
     }
 }

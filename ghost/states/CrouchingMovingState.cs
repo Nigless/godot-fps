@@ -7,8 +7,8 @@ public class CrouchingMovingState : WalkingState
 
     public CrouchingMovingState(Ghost stateMachine) : base(stateMachine)
     {
-        SPEED = 1.5f;
-        COLLIDER_HEIGHT = 1.0f;
+        Speed = Ghost.FALLING_SPEED;
+        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
     }
 
 

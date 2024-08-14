@@ -48,8 +48,6 @@ public class StateMachine
             return;
         }
 
-        Print(state);
-
         _CurrentState.Exit();
         state.Enter();
         _CurrentState = state;

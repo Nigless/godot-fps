@@ -3,7 +3,7 @@ using static Godot.GD;
 
 public class JumpingState : FallingState
 {
-    protected float JUMP_VELOCITY = 4.5f;
+    protected float JumpVelocity = 4.5f;
 
 
 
@@ -15,7 +15,7 @@ public class JumpingState : FallingState
     public override void Enter()
     {
         var velocity = _Context.Velocity;
-        velocity.Y += JUMP_VELOCITY;
+        velocity.Y += JumpVelocity;
         _Context.Velocity = velocity;
     }
 

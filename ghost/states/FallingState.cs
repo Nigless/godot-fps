@@ -6,7 +6,7 @@ using Godot;
 
 public class FallingState : StandingState
 {
-    private const float SPEED = 1.5f;
+    private const float SPEED = Ghost.FALLING_SPEED;
 
     public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
@@ -17,7 +17,7 @@ public class FallingState : StandingState
     protected override void UpdateCollider(double delta)
     {
         CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
-        var height = shape.Height.Lerp(COLLIDER_HEIGHT, TRANSITION_SEED * (float)delta);
+        var height = shape.Height.Lerp(ColliderHeight, Ghost.COLLIDER_TRANSITION_SPEED * (float)delta);
 
         shape.Height = height;
         _Context.Collider.Shape = shape;

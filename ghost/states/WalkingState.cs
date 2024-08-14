@@ -1,10 +1,12 @@
+using ExtensionMethods;
 using Godot;
 using Microsoft.VisualBasic;
+using static Godot.GD;
 
 public class WalkingState : StandingState
 {
 
-    protected float SPEED = 2.5f;
+    protected float Speed = Ghost.WALKING_SPEED;
 
     public WalkingState(Ghost stateMachine) : base(stateMachine)
     {
@@ -16,7 +18,7 @@ public class WalkingState : StandingState
 
         var moveDirection = (_Context.Transform.Basis * new Vector3(InputMoving.X, 0.0f, InputMoving.Y)).Normalized();
 
-        var velocity = moveVelocity.MoveToward(moveDirection * SPEED, ACCELERATION * (float)delta);
+        var velocity = moveVelocity.MoveToward(moveDirection * Speed, Ghost.ACCELERATION * (float)delta);
         velocity.Y = _Context.Velocity.Y;
 
         _Context.Velocity = velocity;

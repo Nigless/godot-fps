@@ -4,14 +4,13 @@ public class RunningState : WalkingState
 
     public RunningState(Ghost stateMachine) : base(stateMachine)
     {
-        SPEED = 4.5f;
+        Speed = Ghost.RUNNING_SPEED;
+        Fov = Ghost.FOV * 1.1f;
     }
-
-
 
     public override State UpdateState()
     {
-        if (!InputIsRunning || InputIsJumping || !_Context.IsOnFloor() || InputIsCrouching)
+        if (InputMoving.Length() == 0 || !InputIsRunning || InputIsJumping || !_Context.IsOnFloor() || InputIsCrouching)
         {
             return _Context.StateMachine.Get<WalkingState>().UpdateState();
         }
