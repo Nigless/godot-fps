@@ -6,7 +6,7 @@ using Godot;
 
 public class FallingState : StandingState
 {
-    private const float SPEED = Ghost.FALLING_SPEED;
+    private const float SPEED = 1.5f;
 
     public float Gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
@@ -14,18 +14,16 @@ public class FallingState : StandingState
     {
 
     }
-    protected override void UpdateCollider(double delta)
-    {
-        CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
-        var height = shape.Height.Lerp(ColliderHeight, Ghost.COLLIDER_TRANSITION_SPEED * (float)delta);
 
-        shape.Height = height;
-        _Context.Collider.Shape = shape;
+    public override void Enter()
+    {
+        _Context.Animator.Set("parameters/camera_state/conditions/grounded", false);
     }
 
 
     protected override void UpdateMoving(double delta)
     {
+
         Vector3 velocity;
         var moveVelocity = new Vector3(_Context.Velocity.X, 0.0f, _Context.Velocity.Z);
 
@@ -41,8 +39,9 @@ public class FallingState : StandingState
             velocity = velocity.Normalized()
             * (moveVelocity.Length() - speed * coefficient);
         }
-        velocity.Y = _Context.Velocity.Y - Gravity * (float)delta;
+        velocity.Y = (float)(_Context.Velocity.Y - Gravity * delta);
 
+        _Context.Animator.Set("parameters/camera_state/falling/speed/add_amount", velocity.Y.Abs() * 0.01);
         _Context.Velocity = velocity;
         _Context.MoveAndSlide();
     }

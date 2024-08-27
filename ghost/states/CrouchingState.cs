@@ -7,14 +7,36 @@ using static Godot.GD;
 public class CrouchingState : StandingState
 {
 
+
+    protected bool CanStandUp
+    {
+        get
+        {
+            if (!_Context.CastUp.IsColliding() || !_Context.CastDown.IsColliding())
+                return true;
+
+            var distanceUp = _Context.CastUp.GetCollisionPoint(0).Y.Abs();
+            var distanceDown = _Context.CastDown.GetCollisionPoint(0).Y.Abs();
+
+            return distanceUp + distanceDown > _Context.ColliderHigh;
+        }
+    }
+
     public CrouchingState(Ghost stateMachine) : base(stateMachine)
     {
-        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
     }
 
 
     public override void Enter()
     {
+        base.Enter();
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", true);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", false);
     }
 
 

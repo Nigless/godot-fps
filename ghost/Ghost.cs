@@ -21,7 +21,7 @@ public partial class Ghost : CharacterBody3D
 	public ShapeCast3D CastDown;
 
 	[Export]
-	public AnimationPlayer Animation;
+	public AnimationTree Animator;
 
 	public StateMachine StateMachine;
 
@@ -31,18 +31,18 @@ public partial class Ghost : CharacterBody3D
 	public const float ACCELERATION = 20.0f;
 	public const float COLLIDER_TRANSITION_SPEED = 10.0f;
 	public const float CAMERA_TRANSITION_SPEED = 5.0f;
-	public const float COLLIDER_HEIGHT = 1.7f;
-	public const float CROUCHING_COLLIDER_HEIGHT = 1f;
 	public const float COLLIDER_RADIUS = 0.327f;
 	public const float WALKING_SPEED = 2.5f;
-	public const float RUNNING_SPEED = 4.5f;
-	public const float FALLING_SPEED = 1.5f;
-	public const float JUMP_VELOCITY = 3.0f;
 
+	public float ColliderHigh = 1.7f;
 
 	public override void _Ready()
 	{
-		StateMachine = new StateMachine(new StandingState(this))
+
+		var initial = new StandingState(this);
+		initial.Enter();
+
+		StateMachine = new StateMachine(initial)
 			.WithState(new WalkingState(this))
 			.WithState(new FallingState(this))
 			.WithState(new JumpingState(this))
@@ -51,6 +51,9 @@ public partial class Ghost : CharacterBody3D
 			.WithState(new CrouchingMovingState(this))
 			.WithState(new CrouchingFallingState(this))
 			.WithState(new CrouchingJumpingState(this));
+
+
+		ColliderHigh = ((CapsuleShape3D)Collider.Shape).Height;
 	}
 
 	public override void _PhysicsProcess(double delta)

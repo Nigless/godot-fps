@@ -4,9 +4,10 @@ public class RunningState : WalkingState
 
     public RunningState(Ghost stateMachine) : base(stateMachine)
     {
-        Speed = Ghost.RUNNING_SPEED;
+        Speed = 4.5f;
         Fov = Ghost.FOV * 1.1f;
     }
+
 
     public override State UpdateState()
     {

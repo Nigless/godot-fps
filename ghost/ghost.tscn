@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://u6h4m5xgby2n"]
+[gd_scene load_steps=37 format=3 uid="uid://u6h4m5xgby2n"]
 
 [ext_resource type="Script" path="res://ghost/Ghost.cs" id="1_j0hy1"]
 
@@ -7,38 +7,102 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("head/camera:rotation")
+tracks/0/path = NodePath("collider:shape:height")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [1.7]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("collider:shape:height")
+tracks/1/path = NodePath("head:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.7]
+"values": [Vector3(0, 0.523, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("head:position")
+tracks/2/path = NodePath("head/camera:rotation:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0.523, 0)]
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("head/camera:rotation:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("head/camera:rotation:z")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("collider:shape:radius")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.327]
+}
+
+[sub_resource type="Animation" id="Animation_lytpt"]
+resource_name = "crouching"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("collider:shape:height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("head:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.173, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_8o423"]
@@ -48,69 +112,254 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("head/camera:rotation")
+tracks/0/path = NodePath("head/camera:rotation:y")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.1, -0.1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("head/camera:rotation:x")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(2, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.1, -0.1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("head/camera:rotation:z")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0, 2, 4, 6),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.0523599, 0, 0), Vector3(0, 0.0349066, 0), Vector3(0.0523599, 0, 0), Vector3(0, -0.0349066, 0)]
+"values": [0.05, -0.05, 0.05, -0.05]
 }
 
 [sub_resource type="Animation" id="Animation_61l1f"]
 resource_name = "moving"
+length = 2.0
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("head/camera:rotation")
+tracks/0/path = NodePath("head/camera:rotation:x")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.005, -0.005, 0.005, -0.005, 0.005, -0.005, 0.005, -0.005]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("head/camera:rotation:y")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0, 0, -0.00872665), Vector3(0, 0, 0.00872665)]
+"values": [0.02, -0.02]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ur47n"]
 _data = {
 "RESET": SubResource("Animation_kpoid"),
+"crouching": SubResource("Animation_lytpt"),
 "falling": SubResource("Animation_8o423"),
 "moving": SubResource("Animation_61l1f")
 }
 
+[sub_resource type="AnimationNodeAdd2" id="AnimationNodeAdd2_6426e"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xnxy2"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7abxx"]
+animation = &"falling"
+
+[sub_resource type="AnimationNodeAdd2" id="AnimationNodeAdd2_okqeb"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_g5rc7"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_7abxx")
+nodes/Animation/position = Vector2(420, 340)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_xnxy2")
+"nodes/Animation 2/position" = Vector2(420, 180)
+nodes/output/position = Vector2(780, 180)
+nodes/speed/node = SubResource("AnimationNodeAdd2_okqeb")
+nodes/speed/position = Vector2(609.4, 196.9)
+node_connections = [&"output", 0, &"speed", &"speed", 0, &"Animation 2", &"speed", 1, &"Animation"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a1thl"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_g0ydw"]
+animation = &"moving"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_dac1d"]
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_sfre7"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_oemkb"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_g0ydw")
+nodes/Animation/position = Vector2(380, 260)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_a1thl")
+"nodes/Animation 2/position" = Vector2(380, 120)
+nodes/output/position = Vector2(860, 120)
+nodes/scale/node = SubResource("AnimationNodeBlend2_dac1d")
+nodes/scale/position = Vector2(520, 120)
+nodes/speed/node = SubResource("AnimationNodeTimeScale_sfre7")
+nodes/speed/position = Vector2(700, 120)
+node_connections = [&"output", 0, &"speed", &"scale", 0, &"Animation 2", &"scale", 1, &"Animation", &"speed", 0, &"scale"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ff17p"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q6ixc"]
+advance_mode = 2
+
+[sub_resource type="Curve" id="Curve_ofmms"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1ugqs"]
+xfade_time = 1.0
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_expression = "not self[\"parameters/camera_state/conditions/grounded\"]"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u08w1"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_condition = &"grounded"
+advance_expression = "not self[\"parameters/camera_state/conditions/moving\"]"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5pm3u"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_condition = &"grounded"
+advance_expression = "self[\"parameters/camera_state/conditions/moving\"]
+"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_85yvd"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_expression = "not self[\"parameters/camera_state/conditions/grounded\"]"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_kclwl"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_condition = &"moving"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_51cl0"]
+xfade_time = 2.0
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_expression = "not self[\"parameters/camera_state/conditions/moving\"]"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_4odtu"]
+states/falling/node = SubResource("AnimationNodeBlendTree_g5rc7")
+states/falling/position = Vector2(692, 183)
+states/moving/node = SubResource("AnimationNodeBlendTree_oemkb")
+states/moving/position = Vector2(583, 345)
+states/standing/node = SubResource("AnimationNodeAnimation_ff17p")
+states/standing/position = Vector2(374, 107)
+transitions = ["Start", "standing", SubResource("AnimationNodeStateMachineTransition_q6ixc"), "standing", "falling", SubResource("AnimationNodeStateMachineTransition_1ugqs"), "falling", "standing", SubResource("AnimationNodeStateMachineTransition_u08w1"), "falling", "moving", SubResource("AnimationNodeStateMachineTransition_5pm3u"), "moving", "falling", SubResource("AnimationNodeStateMachineTransition_85yvd"), "standing", "moving", SubResource("AnimationNodeStateMachineTransition_kclwl"), "moving", "standing", SubResource("AnimationNodeStateMachineTransition_51cl0")]
+graph_offset = Vector2(-192, 67)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_l0cda"]
+animation = &"crouching"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2kgok"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4ohyu"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uk2h2"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_ofmms")
+advance_mode = 2
+advance_condition = &"crouching"
+
+[sub_resource type="Curve" id="Curve_c28id"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hinqe"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_c28id")
+advance_mode = 2
+advance_expression = "not self[\"parameters/collider_state/conditions/crouching\"]"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_514tx"]
+states/crouching/node = SubResource("AnimationNodeAnimation_l0cda")
+states/crouching/position = Vector2(657, 100)
+states/standing/node = SubResource("AnimationNodeAnimation_2kgok")
+states/standing/position = Vector2(403, 100)
+transitions = ["Start", "standing", SubResource("AnimationNodeStateMachineTransition_4ohyu"), "standing", "crouching", SubResource("AnimationNodeStateMachineTransition_uk2h2"), "crouching", "standing", SubResource("AnimationNodeStateMachineTransition_hinqe")]
+
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_qnpgc"]
-graph_offset = Vector2(122.27, 10.3956)
+graph_offset = Vector2(0, -34)
+nodes/Add2/node = SubResource("AnimationNodeAdd2_6426e")
+nodes/Add2/position = Vector2(740, 0)
+nodes/camera_state/node = SubResource("AnimationNodeStateMachine_4odtu")
+nodes/camera_state/position = Vector2(520, -100)
+nodes/collider_state/node = SubResource("AnimationNodeStateMachine_514tx")
+nodes/collider_state/position = Vector2(520, 120)
 nodes/output/position = Vector2(920, 100)
+node_connections = [&"Add2", 0, &"camera_state", &"Add2", 1, &"collider_state", &"output", 0, &"Add2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a8ojg"]
-radius = 0.326865
+radius = 0.327
 height = 1.7
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7i7d1"]
 radius = 0.327
 
-[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Camera", "Collider", "CastUp", "CastDown", "Animation")]
+[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Camera", "Collider", "CastUp", "CastDown", "Animator")]
 script = ExtResource("1_j0hy1")
 Head = NodePath("head")
 Camera = NodePath("head/camera")
 Collider = NodePath("collider")
 CastUp = NodePath("CastUp")
 CastDown = NodePath("CastDown")
-Animation = NodePath("Animation")
+Animator = NodePath("AnimationTree")
 
 [node name="Animation" type="AnimationPlayer" parent="."]
+active = false
 libraries = {
 "": SubResource("AnimationLibrary_ur47n")
 }
 autoplay = "RESET"
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-active = false
 tree_root = SubResource("AnimationNodeBlendTree_qnpgc")
 anim_player = NodePath("../Animation")
+parameters/Add2/add_amount = 1.0
+parameters/camera_state/conditions/grounded = false
+parameters/camera_state/conditions/moving = false
+parameters/camera_state/falling/speed/add_amount = 0.44
+parameters/camera_state/moving/scale/blend_amount = 1.0
+parameters/camera_state/moving/speed/scale = 1.51
+parameters/collider_state/conditions/crouching = false
 
 [node name="head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.523, 0)

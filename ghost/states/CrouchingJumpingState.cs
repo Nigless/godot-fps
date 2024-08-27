@@ -7,8 +7,18 @@ public class CrouchingJumpingState : JumpingState
 {
     public CrouchingJumpingState(Ghost stateMachine) : base(stateMachine)
     {
-        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
-        JumpVelocity = Ghost.JUMP_VELOCITY;
+        JumpVelocity = 3f;
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", true);
+    }
+
+    public override void Exit()
+    {
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", false);
     }
 
     public override State UpdateState()

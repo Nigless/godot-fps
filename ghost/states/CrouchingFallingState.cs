@@ -8,8 +8,20 @@ public class CrouchingFallingState : FallingState
 
     public CrouchingFallingState(Ghost stateMachine) : base(stateMachine)
     {
-        ColliderHeight = Ghost.CROUCHING_COLLIDER_HEIGHT;
     }
+
+
+    public override void Enter()
+    {
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", true);
+        _Context.Animator.Set("parameters/camera_state/conditions/grounded", false);
+    }
+
+    public override void Exit()
+    {
+        _Context.Animator.Set("parameters/collider_state/conditions/crouching", false);
+    }
+
 
     public override State UpdateState()
     {

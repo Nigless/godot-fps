@@ -7,7 +7,6 @@ using static Godot.GD;
 public class StandingState : State
 {
     protected readonly Ghost _Context;
-    protected float ColliderHeight = Ghost.COLLIDER_HEIGHT;
     protected float Fov = Ghost.FOV;
 
 
@@ -21,26 +20,16 @@ public class StandingState : State
         _Context = context;
     }
 
-    protected bool CanStandUp
-    {
-        get
-        {
-
-            if (!_Context.CastUp.IsColliding() || !_Context.CastDown.IsColliding())
-                return true;
-
-            var distanceUp = _Context.CastUp.GetCollisionPoint(0).Y.Abs();
-            var distanceDown = _Context.CastDown.GetCollisionPoint(0).Y.Abs();
-
-            return distanceUp + distanceDown > Ghost.COLLIDER_HEIGHT;
-        }
-    }
-
     public override void Enter()
     {
         Godot.Input.MouseMode = Godot.Input.MouseModeEnum.Captured;
+        _Context.Animator.Set("parameters/camera_state/conditions/grounded", true);
     }
 
+    public override void Exit()
+    {
+        _Context.Animator.Set("parameters/camera_state/conditions/grounded", false);
+    }
 
     public override void Input(InputEvent ev)
     {
@@ -56,39 +45,11 @@ public class StandingState : State
         }
     }
 
-    protected virtual void UpdateHead(double delta)
-    {
-
-        var position = _Context.Head.Position;
-        position.Y = position.Y.Lerp(ColliderHeight / 2 - Ghost.COLLIDER_RADIUS, Ghost.COLLIDER_TRANSITION_SPEED * (float)delta);
-        _Context.Head.Position = position;
-    }
-
-    protected virtual void UpdateCamera(double delta)
-    {
-        _Context.Camera.Fov = _Context.Camera.Fov.Lerp(Fov, Ghost.CAMERA_TRANSITION_SPEED * (float)delta);
-    }
-
-    protected virtual void UpdateCollider(double delta)
-    {
-        CapsuleShape3D shape = (CapsuleShape3D)_Context.Collider.Shape;
-        var position = _Context.Position;
-        var height = shape.Height.Lerp(ColliderHeight, Ghost.COLLIDER_TRANSITION_SPEED * (float)delta);
-
-        position.Y += (height - shape.Height) / 2;
-        _Context.Position = position;
-
-        shape.Height = height;
-        _Context.Collider.Shape = shape;
-    }
-
     protected virtual void UpdateMoving(double delta)
     {
         var moveVelocity = new Vector3(_Context.Velocity.X, 0.0f, _Context.Velocity.Z);
 
         var velocity = moveVelocity.MoveToward(Vector3.Zero, Ghost.ACCELERATION * (float)delta);
-
-        velocity.Y = _Context.Velocity.Y;
 
         _Context.Velocity = velocity;
         _Context.MoveAndSlide();
@@ -96,9 +57,6 @@ public class StandingState : State
 
     public override void Update(double delta)
     {
-        UpdateCollider(delta);
-        UpdateHead(delta);
-        UpdateCamera(delta);
         UpdateMoving(delta);
     }
 

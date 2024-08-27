@@ -12,7 +12,6 @@ public class StateMachine
     public StateMachine(State state)
     {
         _CurrentState = state;
-
         WithState(state);
     }
 
@@ -47,6 +46,8 @@ public class StateMachine
         {
             return;
         }
+
+        GD.Print(state);
 
         _CurrentState.Exit();
         state.Enter();
