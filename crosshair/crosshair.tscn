@@ -5,10 +5,10 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ealg"]
 shader = ExtResource("1_pugmy")
 shader_parameter/dot_color = Color(1, 1, 1, 1)
-shader_parameter/dot_radius = 0.112
+shader_parameter/dot_radius = 0.079
 shader_parameter/dot_blur_radius = 0.022
 shader_parameter/shadow_spread_radius = 0.0
-shader_parameter/shadow_blur_radius = 0.023
+shader_parameter/shadow_blur_radius = 0.077
 shader_parameter/hole_radius = 0.0
 
 [node name="ColorRect" type="ColorRect"]

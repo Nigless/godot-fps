@@ -43,6 +43,8 @@ public partial class Ghost : CharacterBody3D
 	public float CrouchingHeight = 1f;
 	[Export]
 	public float MaxSlopeAngle = 1f;
+	[Export]
+	public float Mass = 1f;
 
 	private float StandingHeight = 1.7f;
 	private CapsuleShape3D Collider;
@@ -129,15 +131,42 @@ public partial class Ghost : CharacterBody3D
 	{
 		MoveAndSlide();
 
-		if (GetSlideCollisionCount() == 0)
+		if (!MoveAndSlide())
 			return;
 
-		var normal = GetSlideCollision(0).GetNormal();
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var collision = GetSlideCollision(i);
 
-		if (normal.Dot(Velocity.Normalized()) >= 0)
-			return;
+			var collider = collision.GetCollider();
 
-		Velocity -= Velocity.Project(normal);
+			var normal = collision.GetNormal();
+
+			if (collider is RigidBody3D)
+			{
+				var rigidBody = collider as RigidBody3D;
+
+				float rigidBodyCoefficient = rigidBody.LinearVelocity.Dot(normal);
+				float characterCoefficient = Velocity.Dot(normal);
+
+				if (rigidBodyCoefficient - characterCoefficient > 0)
+				{
+					float impulseMagnitude = -1 * (rigidBodyCoefficient - characterCoefficient);
+					impulseMagnitude /= (1 / Mass) + (1 / rigidBody.Mass);
+
+					Vector3 impulse = impulseMagnitude * normal;
+
+					Velocity -= impulse / Mass;
+
+					rigidBody.ApplyImpulse(impulse, Transform.Origin - rigidBody.Transform.Origin);
+				}
+			}
+
+			if (normal.Dot(Velocity.Normalized()) >= 0)
+				continue;
+
+			Velocity -= Velocity.Project(normal);
+		}
 	}
 
 	private void UpdateCollider(float height, float delta)
