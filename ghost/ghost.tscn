@@ -222,7 +222,7 @@ height = 1.7
 [sub_resource type="SphereShape3D" id="SphereShape3D_7i7d1"]
 radius = 0.327
 
-[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Camera", "CastUp", "CastDown", "Animator", "CollisionShape")]
+[node name="ghost" type="CharacterBody3D" node_paths=PackedStringArray("Head", "Camera", "CastUp", "CastDown", "Animator", "CollisionShape", "RayCast")]
 motion_mode = 1
 wall_min_slide_angle = 0.0
 floor_stop_on_slope = false
@@ -237,17 +237,19 @@ CastUp = NodePath("CastUp")
 CastDown = NodePath("CastDown")
 Animator = NodePath("Animation")
 CollisionShape = NodePath("collider")
+RayCast = NodePath("head/RayCast3D")
 MouseSensitivity = 0.001
-RunningSpeed = 6.0
-WalkingSpeed = 3.0
-FallingSpeed = 1.0
-CrouchingSpeed = 1.0
-StandingJumpHeight = 4.0
+RunningSpeed = 4.0
+WalkingSpeed = 2.0
+FallingSpeed = 0.8
+CrouchingSpeed = 0.8
+StandingJumpHeight = 2.5
 StandingAcceleration = 0.4
 FallingAcceleration = 0.1
-CrouchingJumpHeight = 3.0
+CrouchingJumpHeight = 1.5
 CrouchingTransition = 15.0
 MaxSlopeAngle = 0.942
+Mass = 65.0
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 active = false
@@ -272,6 +274,10 @@ doppler_tracking = 2
 current = true
 fov = 90.0
 metadata/AnimatedRotation = Vector3(0, 0, -0.01)
+
+[node name="RayCast3D" type="RayCast3D" parent="head"]
+target_position = Vector3(0, 0, -2)
+debug_shape_thickness = 1
 
 [node name="collider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_a8ojg")

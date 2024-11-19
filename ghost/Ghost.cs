@@ -2,6 +2,8 @@ using ExtensionMethods;
 using Godot;
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 
 public partial class Ghost : CharacterBody3D
@@ -18,6 +20,8 @@ public partial class Ghost : CharacterBody3D
 	public AnimationPlayer Animator;
 	[Export]
 	public CollisionShape3D CollisionShape;
+	[Export]
+	public RayCast3D RayCast;
 
 	[Export]
 	public float MouseSensitivity = 0.1f;
@@ -45,16 +49,22 @@ public partial class Ghost : CharacterBody3D
 	public float MaxSlopeAngle = 1f;
 	[Export]
 	public float Mass = 1f;
+	[Export]
+	public float MaxMassHold = 1f;
 
 	private float StandingHeight = 1.7f;
+	private Node3D Cursor;
+	private RigidBody3D? GrabbedBody = null;
 	private CapsuleShape3D Collider;
 	private Vector3 Gravity = Vector3.Down * ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private Vector2 InputMoving => Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 	private bool InputJumping => Input.IsActionJustPressed("jump");
 	private bool InputRunning => Input.IsActionPressed("run");
+	private bool InputGrabbing => Input.IsActionPressed("grab");
 	private bool InputCrouching => Input.IsActionPressed("crouch");
 
 	private Vector3 GroundSurface;
+	private bool Grabbing;
 	private bool Grounded => GroundSurface != Vector3.Zero;
 	private float DistanceToGround;
 	private float DistanceToCelling;
@@ -71,6 +81,7 @@ public partial class Ghost : CharacterBody3D
 		CastUp.TargetPosition = -Gravity.Normalized() * (StandingHeight - Collider.Radius + SafeMargin);
 		CastDown.TargetPosition = Gravity.Normalized() * (StandingHeight - Collider.Radius + SafeMargin);
 
+		Cursor = (Node3D)GD.Load<PackedScene>("res://cursor/cursor.tscn").Instantiate();
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
@@ -91,11 +102,10 @@ public partial class Ghost : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		UpdateGrabbing();
 		UpdateGround();
 		UpdateCelling();
-
 		UpdateGravity((float)delta);
-
 
 		if (InputCrouching)
 			UpdateCollider(CrouchingHeight, (float)delta);
@@ -123,6 +133,8 @@ public partial class Ghost : CharacterBody3D
 		}
 		else if (InputMoving.Length() > 0)
 			UpdateFalling(FallingSpeed);
+
+		UpdatePulling((float)delta);
 
 		UpdatePosition();
 	}
@@ -167,6 +179,102 @@ public partial class Ghost : CharacterBody3D
 
 			Velocity -= Velocity.Project(normal);
 		}
+	}
+
+	private void UpdatePulling(float delta)
+	{
+		if (GrabbedBody == null)
+			return;
+
+		var targetPosition = RayCast.GlobalPosition + RayCast.GlobalBasis * (RayCast.TargetPosition * 0.5f);
+
+		if (GrabbedBody.Mass < MaxMassHold)
+		{
+			var impulse = targetPosition - GrabbedBody.GlobalPosition;
+			GrabbedBody.LinearVelocity = impulse * 0.1f / delta;
+			GrabbedBody.AngularVelocity *= 0;
+			return;
+		}
+
+		var currentPosition = Cursor.GlobalPosition;
+
+		var pullingDirection = targetPosition - currentPosition;
+
+		if ((currentPosition - GlobalPosition).Length() > RayCast.TargetPosition.Length())
+		{
+			ReleaseBody();
+			return;
+		}
+
+		GrabbedBody.ApplyImpulse(pullingDirection, currentPosition - GrabbedBody.GlobalPosition);
+
+		if (GroundSurface == Vector3.Zero)
+			return;
+
+		var hand = currentPosition - (GlobalPosition + Velocity);
+
+		var oppositeForce = hand.Normalized() * Math.Max(0, hand.Length() - RayCast.TargetPosition.Length());
+
+		Velocity += oppositeForce - oppositeForce.Project(GroundSurface);
+	}
+
+	private void UpdateGrabbing()
+	{
+		if (InputGrabbing)
+		{
+			if (Grabbing) return;
+
+			Grabbing = true;
+
+			if (GrabbedBody != null)
+				return;
+
+			if (!RayCast.IsColliding())
+				return;
+
+			var point = RayCast.GetCollisionPoint();
+
+			var collider = RayCast.GetCollider();
+
+			if (collider is not RigidBody3D)
+				return;
+
+
+			Grabbing = true;
+
+			GrabbedBody = (RigidBody3D)collider;
+
+			GrabbedBody.CanSleep = false;
+
+			if (GrabbedBody.Mass < MaxMassHold)
+				return;
+
+			{
+				var transform = Cursor.Transform;
+				transform.Origin = (point - GrabbedBody.Transform.Origin) * -GrabbedBody.Transform.Basis.GetRotationQuaternion();
+				Cursor.Transform = transform;
+			}
+
+			GrabbedBody.AddChild(Cursor);
+
+			return;
+		}
+
+		Grabbing = false;
+
+		ReleaseBody();
+	}
+
+	private void ReleaseBody()
+	{
+		if (GrabbedBody == null)
+			return;
+
+		if (GrabbedBody.Mass > MaxMassHold)
+			GrabbedBody.RemoveChild(Cursor);
+
+		GrabbedBody.CanSleep = true;
+		GrabbedBody = null;
 	}
 
 	private void UpdateCollider(float height, float delta)
@@ -223,25 +331,40 @@ public partial class Ghost : CharacterBody3D
 			return;
 		}
 
-		var distanceToCollision = CastDown.GetCollisionPoint(0).DistanceTo(Transform.Origin);
-
-		DistanceToGround = distanceToCollision;
-
-		if (distanceToCollision > Collider.Height / 2 + SafeMargin)
+		for (int i = 0; i < CastDown.GetCollisionCount(); i++)
 		{
-			GroundSurface = Vector3.Zero;
+			var distanceToCollision = CastDown.GetCollisionPoint(i).DistanceTo(Transform.Origin);
+
+			DistanceToGround = distanceToCollision;
+
+			if (distanceToCollision > Collider.Height / 2 + SafeMargin * 3)
+			{
+				GroundSurface = Vector3.Zero;
+				continue;
+			}
+
+			var normal = CastDown.GetCollisionNormal(i);
+
+			if (normal.AngleTo(-Gravity.Normalized()) > MaxSlopeAngle)
+			{
+				GroundSurface = Vector3.Zero;
+				continue;
+			}
+
+			var collider = CastDown.GetCollider(i);
+
+			if (collider is RigidBody3D)
+			{
+				var body = (RigidBody3D)collider;
+
+				if (body == GrabbedBody)
+					ReleaseBody();
+			}
+
+			GroundSurface = normal;
+
 			return;
 		}
-
-		var normal = CastDown.GetCollisionNormal(0);
-
-		if (normal.AngleTo(-Gravity.Normalized()) > MaxSlopeAngle)
-		{
-			GroundSurface = Vector3.Zero;
-			return;
-		}
-
-		GroundSurface = normal;
 	}
 
 	private void UpdateJumping(float jumpHigh)

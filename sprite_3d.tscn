@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cuygrr0ij13xw"]
+
+[ext_resource type="Texture2D" uid="uid://dyx6j6jxu2rap" path="res://cursor/texture.png" id="1_brq6m"]
+
+[node name="Sprite3D" type="Sprite3D"]
+transform = Transform3D(0.0488372, 0, 0, 0, 0.0488372, 0, 0, 0, 0.0488372, 0, 0, 0)
+billboard = 1
+no_depth_test = true
+texture = ExtResource("1_brq6m")
