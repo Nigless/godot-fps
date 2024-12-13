@@ -1,0 +1,57 @@
+[gd_scene load_steps=12 format=3 uid="uid://bnpe13l81gker"]
+
+[ext_resource type="Script" path="res://button/Button.cs" id="1_27qxr"]
+[ext_resource type="PackedScene" uid="uid://bld6pl5xkigpn" path="res://button/button.blend" id="1_kcqj4"]
+[ext_resource type="Script" path="res://hover/Hover.cs" id="3_kabiv"]
+[ext_resource type="PackedScene" uid="uid://d0pdvwoi1yx4d" path="res://pointer/pointer.tscn" id="4_tuf2v"]
+[ext_resource type="AudioStream" uid="uid://dasjeari048n6" path="res://button/sounds/click_1.wav" id="5_qd321"]
+[ext_resource type="AudioStream" uid="uid://0533b4m5kkbd" path="res://button/sounds/click_2.wav" id="6_5jnn2"]
+[ext_resource type="Script" path="res://play_sound/PlaySound.cs" id="6_ai35b"]
+[ext_resource type="AudioStream" uid="uid://v7hsbbkp2v32" path="res://button/sounds/click_3.wav" id="7_tiqr1"]
+[ext_resource type="AudioStream" uid="uid://b4i1l0tsxsgcr" path="res://button/sounds/click_4.wav" id="8_vwmd4"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_dlvwj"]
+height = 0.517701
+radius = 0.769349
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_vuy0b"]
+random_pitch = 1.1
+streams_count = 4
+stream_0/stream = ExtResource("5_qd321")
+stream_1/stream = ExtResource("6_5jnn2")
+stream_2/stream = ExtResource("7_tiqr1")
+stream_3/stream = ExtResource("8_vwmd4")
+
+[node name="Button" type="Area3D" node_paths=PackedStringArray("Animator")]
+script = ExtResource("1_27qxr")
+Animator = NodePath("model/AnimationPlayer")
+
+[node name="model" parent="." instance=ExtResource("1_kcqj4")]
+
+[node name="body" parent="model" index="0" node_paths=PackedStringArray("Trigger")]
+script = ExtResource("3_kabiv")
+Trigger = NodePath("../..")
+
+[node name="button" parent="model" index="1" node_paths=PackedStringArray("Trigger")]
+script = ExtResource("3_kabiv")
+Trigger = NodePath("../..")
+
+[node name="AnimationPlayer" parent="model" index="2"]
+playback_auto_capture_transition_type = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.480133, 0)
+shape = SubResource("CylinderShape3D_dlvwj")
+
+[node name="Pointer" parent="." node_paths=PackedStringArray("Trigger") instance=ExtResource("4_tuf2v")]
+Trigger = NodePath("..")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." node_paths=PackedStringArray("Trigger")]
+stream = SubResource("AudioStreamRandomizer_vuy0b")
+max_db = 0.0
+attenuation_filter_db = 0.0
+doppler_tracking = 2
+script = ExtResource("6_ai35b")
+Trigger = NodePath("..")
+
+[editable path="model"]

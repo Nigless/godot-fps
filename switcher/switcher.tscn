@@ -1,0 +1,59 @@
+[gd_scene load_steps=13 format=3 uid="uid://dou0iay7sw0w1"]
+
+[ext_resource type="Script" path="res://switcher/Switcher.cs" id="1_l6m7s"]
+[ext_resource type="PackedScene" uid="uid://jtas3138rm3w" path="res://switcher/switcher.blend" id="2_uiadm"]
+[ext_resource type="Texture2D" uid="uid://cue1csua84sw2" path="res://switcher/texture.png" id="3_jkg0g"]
+[ext_resource type="Script" path="res://hover/Hover.cs" id="3_rcv7a"]
+[ext_resource type="PackedScene" uid="uid://d0pdvwoi1yx4d" path="res://pointer/pointer.tscn" id="4_wf7eu"]
+[ext_resource type="AudioStream" uid="uid://coxyxkd133sub" path="res://switcher/sounds/click_1.wav" id="6_ho6cf"]
+[ext_resource type="AudioStream" uid="uid://bt12qo8abook7" path="res://switcher/sounds/click_2.wav" id="7_sjfur"]
+[ext_resource type="AudioStream" uid="uid://xpfj7bjlxjpr" path="res://switcher/sounds/click_3.wav" id="8_5chi4"]
+[ext_resource type="Script" path="res://play_sound/PlaySound.cs" id="10_8nh0y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c58ci"]
+resource_name = "Material"
+albedo_texture = ExtResource("3_jkg0g")
+roughness = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2jl43"]
+size = Vector3(0.710693, 3.8291, 2.55273)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ntnrl"]
+random_pitch = 1.1
+streams_count = 3
+stream_0/stream = ExtResource("6_ho6cf")
+stream_1/stream = ExtResource("7_sjfur")
+stream_2/stream = ExtResource("8_5chi4")
+
+[node name="Switcher" type="Area3D" node_paths=PackedStringArray("Animator")]
+script = ExtResource("1_l6m7s")
+Animator = NodePath("switcher/AnimationPlayer")
+
+[node name="switcher" parent="." instance=ExtResource("2_uiadm")]
+
+[node name="body" parent="switcher" index="0" node_paths=PackedStringArray("Trigger")]
+material_override = SubResource("StandardMaterial3D_c58ci")
+script = ExtResource("3_rcv7a")
+Trigger = NodePath("../..")
+
+[node name="switch" parent="switcher" index="1" node_paths=PackedStringArray("Trigger")]
+transform = Transform3D(0.998282, -0.11111, 0, 0.11111, 0.998282, 0, 0, 0, 1.00445, 0.247167, 0, 0)
+script = ExtResource("3_rcv7a")
+Trigger = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.203125, 0, 0)
+shape = SubResource("BoxShape3D_2jl43")
+
+[node name="Pointer" parent="." node_paths=PackedStringArray("Trigger") instance=ExtResource("4_wf7eu")]
+Trigger = NodePath("..")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." node_paths=PackedStringArray("Trigger")]
+stream = SubResource("AudioStreamRandomizer_ntnrl")
+max_db = -4.0
+attenuation_filter_db = 0.0
+doppler_tracking = 2
+script = ExtResource("10_8nh0y")
+Trigger = NodePath("..")
+
+[editable path="switcher"]
