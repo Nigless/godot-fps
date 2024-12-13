@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0pdvwoi1yx4d"]
+
+[ext_resource type="Texture2D" uid="uid://bof7c6m07urc7" path="res://pointer/texture.png" id="1_c7vcb"]
+[ext_resource type="Script" path="res://pointer/Pointer.cs" id="2_s8vj7"]
+
+[node name="Pointer" type="TextureRect"]
+visible = false
+texture_filter = 5
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -22.0
+offset_right = 42.0
+offset_bottom = 42.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_c7vcb")
+script = ExtResource("2_s8vj7")

@@ -1,28 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbxgxee7qwrdf"]
+[gd_scene load_steps=2 format=3 uid="uid://bbxgxee7qwrdf"]
 
-[ext_resource type="Shader" path="res://crosshair/crosshair.gdshader" id="1_pugmy"]
+[ext_resource type="Texture2D" uid="uid://b05oibu2y0gqp" path="res://crosshair/texture.png" id="1_th2x0"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ealg"]
-shader = ExtResource("1_pugmy")
-shader_parameter/dot_color = Color(1, 1, 1, 1)
-shader_parameter/dot_radius = 0.079
-shader_parameter/dot_blur_radius = 0.022
-shader_parameter/shadow_spread_radius = 0.0
-shader_parameter/shadow_blur_radius = 0.077
-shader_parameter/hole_radius = 0.0
-
-[node name="ColorRect" type="ColorRect"]
-material = SubResource("ShaderMaterial_7ealg")
+[node name="Control" type="TextureRect"]
+texture_filter = 5
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -15.0
-offset_top = -15.0
-offset_right = 15.0
-offset_bottom = 15.0
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(22.0023, 21.9464)
 size_flags_horizontal = 4
 size_flags_vertical = 4
+texture = ExtResource("1_th2x0")

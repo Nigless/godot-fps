@@ -37,7 +37,7 @@ script = ExtResource("3_rcv7a")
 Trigger = NodePath("../..")
 
 [node name="switch" parent="switcher" index="1" node_paths=PackedStringArray("Trigger")]
-transform = Transform3D(0.998282, -0.11111, 0, 0.11111, 0.998282, 0, 0, 0, 1.00445, 0.247167, 0, 0)
+transform = Transform3D(0.998282, 0.11111, 0, -0.11111, 0.998282, 0, 0, 0, 1.00445, 0.247167, 0, 0)
 script = ExtResource("3_rcv7a")
 Trigger = NodePath("../..")
 

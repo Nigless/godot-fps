@@ -69,6 +69,7 @@ public partial class Ghost : CharacterBody3D
 	private float DistanceToGround;
 	private float DistanceToCelling;
 	private bool CanStand => DistanceToGround + DistanceToCelling > StandingHeight;
+	private Interact InteractObj;
 	private bool Running => InputRunning && InputMoving.Y <= 0;
 
 	public override void _Ready()
@@ -102,6 +103,7 @@ public partial class Ghost : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		UpdateInteracting();
 		UpdateGrabbing();
 		UpdateGround();
 		UpdateCelling();
@@ -141,8 +143,6 @@ public partial class Ghost : CharacterBody3D
 
 	private void UpdatePosition()
 	{
-		MoveAndSlide();
-
 		if (!MoveAndSlide())
 			return;
 
@@ -191,35 +191,84 @@ public partial class Ghost : CharacterBody3D
 		if (GrabbedBody.Mass < MaxMassHold)
 		{
 			var impulse = targetPosition - GrabbedBody.GlobalPosition;
-			GrabbedBody.LinearVelocity = impulse * 0.1f / delta;
+			if (impulse.Length() > 0.5)
+			{
+				ReleaseBody();
+				return;
+			}
+
+			GrabbedBody.LinearVelocity = impulse / delta;
 			GrabbedBody.AngularVelocity *= 0;
 			return;
 		}
 
-		var currentPosition = Cursor.GlobalPosition;
+		var handLength = RayCast.TargetPosition.Length();
 
-		var pullingDirection = targetPosition - currentPosition;
+		var cursorPosition = Cursor.GlobalPosition;
 
-		if ((currentPosition - GlobalPosition).Length() > RayCast.TargetPosition.Length())
+		if (GlobalPosition.DistanceTo(cursorPosition) > handLength)
 		{
 			ReleaseBody();
 			return;
 		}
 
-		GrabbedBody.ApplyImpulse(pullingDirection, currentPosition - GrabbedBody.GlobalPosition);
+		var pullingDirection = targetPosition - cursorPosition;
+
+		GrabbedBody.ApplyImpulse(pullingDirection, cursorPosition - GrabbedBody.GlobalPosition);
 
 		if (GroundSurface == Vector3.Zero)
 			return;
 
-		var hand = currentPosition - (GlobalPosition + Velocity);
+		var currentHand = cursorPosition - (GlobalPosition + Velocity);
 
-		var oppositeForce = hand.Normalized() * Math.Max(0, hand.Length() - RayCast.TargetPosition.Length());
+		var oppositeForce = currentHand.Normalized() * Math.Max(0, currentHand.Length() - handLength);
 
 		Velocity += oppositeForce - oppositeForce.Project(GroundSurface);
 	}
 
+	private void HoverExit()
+	{
+		if (InteractObj != null)
+			InteractObj.HoverExit();
+
+		InteractObj = null;
+	}
+
+	private void UpdateInteracting()
+	{
+
+		if (!RayCast.IsColliding())
+		{
+			HoverExit();
+			return;
+		}
+
+		var collider = RayCast.GetCollider();
+
+		if (collider is not Interact)
+		{
+			HoverExit();
+			return;
+		}
+
+		var interact = (Interact)collider;
+
+		if (InputGrabbing && !Grabbing)
+			interact.Trigger();
+
+		if (interact == InteractObj)
+			return;
+
+		if (InteractObj != null)
+			InteractObj.HoverExit();
+
+		interact.HoverEnter();
+		InteractObj = interact;
+	}
+
 	private void UpdateGrabbing()
 	{
+
 		if (InputGrabbing)
 		{
 			if (Grabbing) return;
@@ -232,13 +281,12 @@ public partial class Ghost : CharacterBody3D
 			if (!RayCast.IsColliding())
 				return;
 
-			var point = RayCast.GetCollisionPoint();
-
 			var collider = RayCast.GetCollider();
+
+			var point = RayCast.GetCollisionPoint();
 
 			if (collider is not RigidBody3D)
 				return;
-
 
 			Grabbing = true;
 
@@ -272,6 +320,8 @@ public partial class Ghost : CharacterBody3D
 
 		if (GrabbedBody.Mass > MaxMassHold)
 			GrabbedBody.RemoveChild(Cursor);
+		else
+			GrabbedBody.LinearVelocity *= 0.5f;
 
 		GrabbedBody.CanSleep = true;
 		GrabbedBody = null;

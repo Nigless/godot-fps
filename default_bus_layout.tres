@@ -1,0 +1,15 @@
+[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://dh81d76hsm38j"]
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_h46uv"]
+resource_name = "Reverb"
+predelay_feedback = 0.22
+room_size = 0.38
+damping = 0.38
+spread = 0.33
+hipass = 0.46
+dry = 0.97
+wet = 0.13
+
+[resource]
+bus/0/effect/0/effect = SubResource("AudioEffectReverb_h46uv")
+bus/0/effect/0/enabled = true
